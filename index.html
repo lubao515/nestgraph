@@ -5,37 +5,46 @@
   <style>
 
 body {
-  font: 11px tahoma, arial, sans-serif;
+  font: 12px calibri, tahoma, arial, sans-serif;
 }
 
   .axis path,
   .axis line {
     fill: none;
     stroke: #000;
-    shape-rendering: crispEdges;
+    shape-rendering: softEdges;
+	
   }
 
-  .line {
+  .line { 
     fill: none;
     stroke: steelblue;
-    stroke-width: 1.0px;
-    border-width: 0 0 0 2px;
+    stroke-width: 1px;
+	border-width: 0 0 0 2px;
   }
 
+  .lineCooling { 
+    fill: none;
+    stroke: cadetblue;
+    stroke-width: 1px;
+	border-width: 0 0 0 2px;
+  }
+  
   .brush .extent {
     stroke: #fff;
     fill-opacity: .125;
-    shape-rendering: crispEdges;
+    shape-rendering: softEdges;
+	
   }
 
   </style>
 </head>
 <body>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="./d3js/d3.js"></script>
   <script>
 
 // change this if you want to limit the amount of data pulled
-var hours = 24 * 7;
+var hours = 24 * 14;
 
 var fullWidth = window.innerWidth * 0.97;
 var fullHeight = window.innerHeight * 0.95;
@@ -131,19 +140,17 @@ function brushUpdate() {
   upper.select(".x.axis").call(xAxis);
   upper.selectAll(".plot path")
     .attr("d", function(d) { 
-      if (d.name == "current") 
-	return line(d.values); 
-      else
-	return lineStepafter(d.values); 
+		if (d.name == "current") return line(d.values);
+		else return lineStepafter(d.values); 
     })
   upper.selectAll("circle")
     .attr("cx", function(d) { return x(d.date); }) 
     .attr("cy", function(d) { return y(d.val); }) 
 }
 
-// fetch the data
-d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
-  color.domain(d3.keys(data[0]).filter(function(key) { return (key == "current" || key == "target" || key == "heating"); }));
+// fetch the data "Tab Seperated Values"
+d3.tsv("fetch.php?hrs=" + hours, function(error, data) { 
+  color.domain(d3.keys(data[0]).filter(function(key) { return (key == "current" || key == "target" || key == "heating"||key == "manualAway"|| key == "cooling"|| key == "fan"|| key == "autoAway"||  key == "leaf"|| key == "humidity"); }));
 
   data.forEach(function(d) {
     d.date = parseDate(d.timestamp);
@@ -154,6 +161,16 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
       name: name,
       values: data.map(function(d) {
 	if (name == "heating") 
+          return { date: d.date, val: +d[name] + 66 };
+	else if(name == "cooling") 
+          return { date: d.date, val: +d[name] + 70 };
+	else if(name == "fan") 
+          return { date: d.date, val: +d[name] + 68 };
+	else if(name == "autoAway") 
+          return { date: d.date, val: +d[name] + 63 };
+	else if(name == "manualAway") 
+          return { date: d.date, val: +d[name] + 40 };
+	else if(name == "leaf") 
           return { date: d.date, val: +d[name] + 60 };
 	else
           return { date: d.date, val: +d[name] };
@@ -215,31 +232,24 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
     .enter().append("g")
     .attr("class", function(d) { return "plot temps " + d.name; });
 
-  // draw upper current/target/furnace trendlines
+  // draw upper "current" trendlines
   upper.selectAll(".plot")
     .append("path")
     .attr("class", "line")
     .attr("d", function(d) { 
-      if (d.name == "current") 
-	return line(d.values); 
-      else
-	return lineStepafter(d.values); 
-    })
-    .style("stroke", function(d) { 
-      return color(d.name); 
-    })
+		if (d.name == "current") 
+		return line(d.values); 
+		else return lineStepafter(d.values);})
+	.style("stroke", function(d) { return color(d.name); })
     .attr("clip-path", "url(#clip)");
 
-  // draw lower current/target trendlines
+  // draw lower "current" trendlines
   lower.selectAll(".plot")
     .append("path")
     .attr("class", "line")
     .attr("d", function(d) { 
-      if (d.name == "current") 
-	return line2(d.values); 
-      else
-	return lineStepafter2(d.values); 
-    })
+		if (d.name == "current") return line2(d.values); 
+		else return lineStepafter2(d.values); })
     .style("stroke", function(d) { return color(d.name); });
 
   // draw upper labels
