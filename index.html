@@ -264,10 +264,10 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
     .enter().append("circle")
     .attr("cx", function(d) { return x(d.date); }) 
     .attr("cy", function(d) { return y(d.val); }) 
-    .attr("r", 1) 
+    .attr("r", 10) 
     .attr("stroke", "black")
     .attr("stroke-width", 1)
-    .attr("opacity", 0.1) 
+    .attr("opacity", 0) 
     .append("svg:title").text(function(d) {
       return format(d.date) + "\n" + d.val + "\u00B0 F";
     });
