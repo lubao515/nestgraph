@@ -16,7 +16,7 @@ body {
 	
   }
 
-  .line { 
+  .line {
     fill: none;
     stroke: steelblue;
     stroke-width: 1px;
@@ -33,7 +33,7 @@ body {
   </style>
 </head>
 <body>
-<script src="http://d3js.org/d3.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
   <script>
 
 // change this if you want to limit the amount of data pulled
@@ -133,16 +133,18 @@ function brushUpdate() {
   upper.select(".x.axis").call(xAxis);
   upper.selectAll(".plot path")
     .attr("d", function(d) { 
-		if (d.name == "current") return line(d.values);
-		else return lineStepafter(d.values); 
+      if (d.name == "current") 
+	return line(d.values); 
+      else
+	return lineStepafter(d.values); 
     })
   upper.selectAll("circle")
     .attr("cx", function(d) { return x(d.date); }) 
     .attr("cy", function(d) { return y(d.val); }) 
 }
 
-// fetch the data "Tab Seperated Values"
-d3.tsv("fetch.php?hrs=" + hours, function(error, data) { 
+// fetch the data
+d3.tsv("fetch.php?hrs=" + hours, function(error, data) { //
   color.domain(d3.keys(data[0]).filter(function(key) { return (key == "current" || key == "target" || key == "heating"||key == "manualAway"|| key == "cooling"|| key == "fan"|| key == "autoAway"||  key == "leaf"|| key == "humidity"); }));
 
   data.forEach(function(d) {
@@ -225,24 +227,31 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
     .enter().append("g")
     .attr("class", function(d) { return "plot temps " + d.name; });
 
-  // draw upper "current" trendlines
+  // draw upper current/target/furnace trendlines
   upper.selectAll(".plot")
     .append("path")
     .attr("class", "line")
     .attr("d", function(d) { 
-		if (d.name == "current") 
-		return line(d.values); 
-		else return lineStepafter(d.values);})
-	.style("stroke", function(d) { return color(d.name); })
+      if (d.name == "current") 
+	return line(d.values); 
+      else
+	return lineStepafter(d.values); 
+    })
+    .style("stroke", function(d) { 
+      return color(d.name); 
+    })
     .attr("clip-path", "url(#clip)");
 
-  // draw lower "current" trendlines
+  // draw lower current/target trendlines
   lower.selectAll(".plot")
     .append("path")
     .attr("class", "line")
     .attr("d", function(d) { 
-		if (d.name == "current") return line2(d.values); 
-		else return lineStepafter2(d.values); })
+      if (d.name == "current") 
+	return line2(d.values); 
+      else
+	return lineStepafter2(d.values); 
+    })
     .style("stroke", function(d) { return color(d.name); });
 
   // draw upper labels
@@ -260,21 +269,21 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
     .attr("class", "circles")
     .attr("clip-path", "url(#clip)");
 
-  // draw the circles with tooltips
+  /*// draw the circles with tooltips
   var format = d3.time.format("%a %b %-d %Y %-I:%M:%S %p");
   upper.selectAll(".circles").selectAll(".thecircles")
     .data((points.filter(function(f) { return f.name == 'current'; }))[0].values)
     .enter().append("circle")
     .attr("cx", function(d) { return x(d.date); }) 
     .attr("cy", function(d) { return y(d.val); }) 
-    .attr("r", 10) 
+    .attr("r", 5) 
     .attr("stroke", "black")
     .attr("stroke-width", 1)
-    .attr("opacity", 0) 
+    .attr("opacity", 0.1) 
     .append("svg:title").text(function(d) {
       return format(d.date) + "\n" + d.val + "\u00B0 F";
     });
-  
+  */
   // draw the d3 pan/zoom "brush" object
   lower.append("g")
     .attr("class", "x brush")
