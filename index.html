@@ -264,7 +264,7 @@ d3.tsv("fetch.php?hrs=" + hours, function(error, data) {
     .enter().append("circle")
     .attr("cx", function(d) { return x(d.date); }) 
     .attr("cy", function(d) { return y(d.val); }) 
-    .attr("r", 10) 
+    .attr("r", 1) 
     .attr("stroke", "black")
     .attr("stroke-width", 1)
     .attr("opacity", 0.1) 
