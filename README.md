@@ -2,6 +2,9 @@
 
 Create pretty charts of your Nest thermostat data.
 
+## Working Example
+[My Nest](Http://home.1930networks.com/nest)
+
 ## Background
 
 The point of this project was to see how well the Nest algorithms work. In particuar, the Nest claims to minimize overshoot, which is a common problem with cast-iron radiators. It also claims to know when to start heating in order to hit your target temperature exactly at the time you scheduled it.  
@@ -81,10 +84,17 @@ For windows users use the NEST_UPDATER.BAT file in windows Tasks Same frequency 
 
 Point web browser to the ```nestgraph``` directory on your webserver!  Admire pretty graphs (actually, they won't be all that pretty until it has collected some data).
 
+## This version has
+* Current temp with a curved line
+* Heating On/Off
+* Cooling On/Off
+* Fan On/Off
+* Humidity %
+* Auto/Manual Away 
+* Leaf (indicated by a bump)
 
 ## Known Issues
-
-* Only checks for heating on/off, not cooling (I don't have cooling)
+* need to figure out how to make curved lines for the other reportable data elements. 
 * Only supports a single Nest thermostat (I only have one)
 * Heating on/off trendline lazily mapped on to the temperature graph
 * Assumes you want temperatures displayed in Fahrenheit
