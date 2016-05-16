@@ -20,7 +20,7 @@ I also wanted an excuse to play with the [D3](http://d3js.org) (Data-Driven Docu
 * Lower mini-chart is interactive pan-and-zoom of the upper chart
 * Hover over the gray circles to get the exact timestamp and temperature
 
-![nestgraph screenshot](https://github.com/chriseng/nestgraph/raw/master/nestgraph-screenshot.png)
+![nestgraph screenshot](https://github.com/DeFlanko/nestgraph/blob/master/NestGraph.png)
 
 ## Dependencies
 
@@ -71,6 +71,8 @@ mysql -u root < dbsetup
 ```
 
 Create a cron job to poll the website periodically and update the local database. The thermostat does not phone home on a fixed schedule, but typically it updates in 5 to 30 minute intervals. The script will only insert into the database if there is new data available. Obviously, update the path to ```insert.php``` if it's not in ```/var/www/html/nestgraph```.
+
+For windows users use the NEST_UPDATER.BAT file in windows Tasks Same frequency as above (5 - 30 mins) i have mine set to 5 mins. 
 
 ```bash
 */5 * * * *     /bin/rm -f /tmp/nest_php_* ; /usr/bin/php /var/www/html/nestgraph/insert.php > /dev/null
