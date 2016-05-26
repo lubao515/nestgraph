@@ -75,7 +75,9 @@ mysql -u root < dbsetup
 
 Create a cron job to poll the website periodically and update the local database. The thermostat does not phone home on a fixed schedule, but typically it updates in 5 to 30 minute intervals. The script will only insert into the database if there is new data available. Obviously, update the path to ```insert.php``` if it's not in ```/var/www/html/nestgraph```.
 
-For windows users use the NEST_UPDATER.BAT file in windows Tasks Same frequency as above (5 - 30 mins) i have mine set to 5 mins. 
+For windows users use the NEST_UPDATER.BAT file in windows Tasks Same frequency as above (5 - 30 mins) i have mine set to 30 mins. 
+
+NOTE: if you have it calling every 5 mins NEST will put a stop to it and stop allowing connections. If this happens stop the updater for a few days and start it back up with a wider interval. I now have my Task Schedular for the Bat file set to 30 mins. 
 
 ```bash
 */5 * * * *     /bin/rm -f /tmp/nest_php_* ; /usr/bin/php /var/www/html/nestgraph/insert.php > /dev/null
