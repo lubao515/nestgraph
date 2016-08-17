@@ -1,9 +1,7 @@
 # nestgraph
 
-Create pretty charts of your Nest thermostat data.
+Create pretty charts of your Nest thermostat data. Instead of using the unofficial nest_api, the official one is used.
 
-## Working Example
-[My Nest](Http://home.1930networks.com/nest)
 
 ## Background
 
@@ -28,7 +26,6 @@ I also wanted an excuse to play with the [D3](http://d3js.org) (Data-Driven Docu
 ## Dependencies
 
 * LAMP stack
-* Unofficial [nest-api](https://github.com/gboudreau/nest-api) library by Guillaume Boudreau
 
 ## Getting Started
 
@@ -47,7 +44,7 @@ wget https://github.com/gboudreau/nest-api/archive/master.zip
 unzip master.zip
 rm -f master.zip
 ```
-Open ```inc/config.php``` in a text editor and update the ```nest_user``` and ```nest_pass``` variables with your username and password for nest.com.  Update the ```local_tz``` variable to reflect your time zone.
+Open ```inc/config.php``` in a text editor and update the ```nest_token``` .  Update the ```local_tz``` variable to reflect your time zone.
 
 Run the test script to make sure that the API is able to pull your thermostat data correctly from nest.com.
 
@@ -80,7 +77,7 @@ For windows users use the NEST_UPDATER.BAT file in windows Tasks Same frequency 
 NOTE: if you have it calling every 5 mins NEST will put a stop to it and stop allowing connections. If this happens stop the updater for a few days and start it back up with a wider interval. I now have my Task Schedular for the Bat file set to 30 mins. 
 
 ```bash
-*/5 * * * *     /bin/rm -f /tmp/nest_php_* ; /usr/bin/php /var/www/html/nestgraph/insert.php > /dev/null
+*/5 * * * *     /usr/bin/php /var/www/html/nestgraph/insert.php > /dev/null
 ```
 (FYI, the reason we remove the files in ```/tmp``` is because it seems the nest-api library attempts to cache authentication info too aggressively, and after a few days it ends up trying to connect to an AWS server that no longer exists.)
 
@@ -102,5 +99,3 @@ Point web browser to the ```nestgraph``` directory on your webserver!  Admire pr
 * Assumes you want temperatures displayed in Fahrenheit
 * Doesn't automatically redraw when you resize the browser window
 * Labels (current/target/heating) don't follow the trend lines when you pan/zoom
-* Need to figure out what's actually wrong with the authentication caching in ```nest-api``` instead of just purging its files in ```/tmp```
-
