@@ -1,42 +1,25 @@
 <?php
 
 require 'inc/config.php';
-require 'nest-api-master/nest.class.php';
+require 'collect.php';
 
-define('USERNAME', $config['nest_user']);
-define('PASSWORD', $config['nest_pass']);
-date_default_timezone_set($config['local_tz']);
 
-$nest = new Nest();
+$data = get_nest_data();
 
-$status = $nest->getStatus();
-print_r($status);
+
 echo "\n<br>\n<br>";
+stuff_we_care_about($data);
 
-$infos = $nest->getDeviceInfo();
-print_r($infos);
-echo "\n<br>\n<br>";
-stuff_we_care_about($infos);
-
-function stuff_we_care_about($info) {
+function stuff_we_care_about($data) {
   echo "Heating             : ";
-  printf("%s\n<br>", ($info->current_state->heat == 1 ? 1 : 0));
+  printf("%s\n<br>", $data['heating']);
   echo "Timestamp           : ";
-  printf("%s\n<br>", $info->network->last_connection);
+  printf("%s\n<br>", $data['timestamp']);
   echo "Target temperature  : ";
-  if (preg_match("/away/", $info->current_state->mode)) {
-    printf("%.02f\n<br>", $info->target->temperature[0]);
-  } else {
-    printf("%.02f\n<br>", $info->target->temperature);
-  }
+  printf("%.02f\n<br>", $data['target_temp']);
   echo "Current temperature : ";
-  printf("%.02f\n<br>", $info->current_state->temperature);
+  printf("%.02f\n<br>", $data['current_temp']);
   echo "Current humidity    : ";
-  printf("%d\n<br>", $info->current_state->humidity);
+  printf("%d\n<br>", $data['humidity']);
 
 }
-
-function c_to_f($c) {
-  return ($c * 1.8) + 32;
-}
-
