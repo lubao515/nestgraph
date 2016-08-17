@@ -3,6 +3,7 @@
 require 'inc/config.php';
 require 'inc/class.db.php';
 
+date_default_timezone_set($config['local_tz']);
 define('DEFAULT_HRS', 72);
 
 $hrs = DEFAULT_HRS; 

@@ -12,24 +12,26 @@ function get_nest_data() {
   curl_setopt($ch,CURLOPT_HTTPHEADER,array('Content-Type: application/json', 'Authorization: Bearer '.$config['nest_token']));
   curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
   curl_setopt ( $ch, CURLOPT_FOLLOWLOCATION, true );
-  curl_setopt ( $ch, CURLOPT_CONNECTTIMEOUT, $timeout );
+  curl_setopt ( $ch, CURLOPT_CONNECTTIMEOUT, 5 );
   curl_setopt ( $ch, CURLOPT_AUTOREFERER, true ); 
   $ret = curl_exec ( $ch );
   curl_close ( $ch );
   $ret = json_decode($ret, true);
   
-  
+  //Assume there is only one home and one thermostat
+  $current_thermostats = current($ret['devices']['thermostats']);
+  $current_home = current($ret['structures']);
 
-  $data = array('heating'      => ($ret['devices']['thermostats'][0]['hvac_mode'] == 'heat' ? 1 : 0),
-                'cooling'      => ($ret['devices']['thermostats'][0]['hvac_mode'] == 'cool' ? 1 : 0),
-                'fan'          => ($ret['devices']['thermostats'][0]['fan_timer_active'] == true ? 1 : 0),
-                'autoAway'     => ($ret['structures'][0]['away'] == 'auto-away' ? 1 : 0),
-                'manualAway'   => ($ret['structures'][0]['away'] == 'away' ? 1 : 0),
-                'leaf'         => ($ret['devices']['thermostats'][0]['has_leaf'] == true ? 1 : 0),
-                'timestamp'    => $ret['devices']['thermostats'][0]['last_connection'],
-                'target_temp'  => $ret['devices']['thermostats'][0]['target_temperature_f'],
-                'current_temp' => $ret['devices']['thermostats'][0]['ambient_temperature_f'],
-                'humidity'     => $ret['devices']['thermostats'][0]['humidity']
+  $data = array('heating'      => ($current_thermostats['hvac_mode'] == 'heat' ? 1 : 0),
+                'cooling'      => ($current_thermostats['hvac_mode'] == 'cool' ? 1 : 0),
+                'fan'          => ($current_thermostats['fan_timer_active'] == true ? 1 : 0),
+                'autoAway'     => ($current_home['away'] == 'auto-away' ? 1 : 0),
+                'manualAway'   => ($current_home['away'] == 'away' ? 1 : 0),
+                'leaf'         => ($current_thermostats['has_leaf'] == true ? 1 : 0),
+                'timestamp'    => $current_thermostats['last_connection'],
+                'target_temp'  => $current_thermostats['target_temperature_f'],
+                'current_temp' => $current_thermostats['ambient_temperature_f'],
+                'humidity'     => $current_thermostats['humidity']
                );
   return $data;
 }
