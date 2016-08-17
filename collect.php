@@ -22,6 +22,7 @@ function get_nest_data() {
   $current_thermostats = current($ret['devices']['thermostats']);
   $current_home = current($ret['structures']);
 
+
   $data = array('heating'      => ($current_thermostats['hvac_state'] == 'heating' ? 1 : 0),
                 'cooling'      => ($current_thermostats['hvac_state'] == 'cooling' ? 1 : 0),
                 'fan'          => ($current_thermostats['fan_timer_active'] == true ? 1 : 0),

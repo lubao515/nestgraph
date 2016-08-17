@@ -21,7 +21,6 @@ I also wanted an excuse to play with the [D3](http://d3js.org) (Data-Driven Docu
 * Lower mini-chart is interactive pan-and-zoom of the upper chart
 * Hover over the gray circles to get the exact timestamp and temperature
 
-![nestgraph screenshot](https://github.com/DeFlanko/nestgraph/blob/master/NestGraph.png)
 
 ## Dependencies
 
@@ -33,18 +32,12 @@ Clone this repo into your web root.
 
 ```bash
 cd [your-web-root]
-git clone https://github.com/chriseng/nestgraph.git
+git clone https://github.com/lubao515/nestgraph.git
 ```
 
-Grab a copy of nest-api and unzip into the ```nestgraph``` directory you created in the previous step. It should create a subdirectory called ```nest-api-master```.
 
-```bash
-cd nestgraph
-wget https://github.com/gboudreau/nest-api/archive/master.zip
-unzip master.zip
-rm -f master.zip
-```
-Open ```inc/config.php``` in a text editor and update the ```nest_token``` .  Update the ```local_tz``` variable to reflect your time zone.
+Open ```inc/config.php``` in a text editor and update the ```nest_token``` (For more detial to get nest access token see [here](https://developers.nest.com/documentation/cloud/how-to-auth/)).  Update the ```local_tz``` variable to reflect your time zone.
+
 
 Run the test script to make sure that the API is able to pull your thermostat data correctly from nest.com.
 
@@ -72,14 +65,12 @@ mysql -u root < dbsetup
 
 Create a cron job to poll the website periodically and update the local database. The thermostat does not phone home on a fixed schedule, but typically it updates in 5 to 30 minute intervals. The script will only insert into the database if there is new data available. Obviously, update the path to ```insert.php``` if it's not in ```/var/www/html/nestgraph```.
 
-For windows users use the NEST_UPDATER.BAT file in windows Tasks Same frequency as above (5 - 30 mins) i have mine set to 30 mins. 
 
-NOTE: if you have it calling every 5 mins NEST will put a stop to it and stop allowing connections. If this happens stop the updater for a few days and start it back up with a wider interval. I now have my Task Schedular for the Bat file set to 30 mins. 
+NOTE: if you have it calling every 5 mins NEST will put a stop to it and stop allowing connections. If this happens stop the updater for a few days and start it back up with a wider interval.
 
 ```bash
 */5 * * * *     /usr/bin/php /var/www/html/nestgraph/insert.php > /dev/null
 ```
-(FYI, the reason we remove the files in ```/tmp``` is because it seems the nest-api library attempts to cache authentication info too aggressively, and after a few days it ends up trying to connect to an AWS server that no longer exists.)
 
 Point web browser to the ```nestgraph``` directory on your webserver!  Admire pretty graphs (actually, they won't be all that pretty until it has collected some data).
 
@@ -94,7 +85,7 @@ Point web browser to the ```nestgraph``` directory on your webserver!  Admire pr
 
 ## Known Issues
 * need to figure out how to make curved lines for the other reportable data elements. 
-* Only supports a single Nest thermostat (I only have one)
+* Only supports a single Nest thermostat from a single home. If many, the first one will be shown.
 * Heating on/off trendline lazily mapped on to the temperature graph
 * Assumes you want temperatures displayed in Fahrenheit
 * Doesn't automatically redraw when you resize the browser window
